@@ -24,6 +24,8 @@ public class UserDTO {
     @Size(min=3, max=20)
     private String lastName;
 
+    private String password;
+
     @Size(min=3, max=20)
     private String name;
 
