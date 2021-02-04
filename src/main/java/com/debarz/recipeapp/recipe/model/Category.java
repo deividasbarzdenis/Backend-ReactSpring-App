@@ -3,9 +3,11 @@ package com.debarz.recipeapp.recipe.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Set;
+
 
 @Getter
 @Setter
@@ -16,7 +18,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private String description;
+    private String categoryDescription;
 
     @ManyToMany(mappedBy = "categories")
     private Set<Recipe> recipes;

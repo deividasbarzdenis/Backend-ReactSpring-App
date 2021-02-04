@@ -1,6 +1,7 @@
 package com.debarz.recipeapp.user.controller;
 
 import com.debarz.recipeapp.user.dto.UserDTO;
+import com.debarz.recipeapp.user.model.User;
 import com.debarz.recipeapp.user.service.UserService;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
@@ -30,9 +31,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> addUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<UserDTO> addUser(@RequestBody @Valid User user) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.createUser(userDTO));
+                .body(userService.createUser(user));
     }
 
     @PostMapping("/{id}")

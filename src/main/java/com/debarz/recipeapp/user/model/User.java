@@ -4,12 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -42,8 +45,8 @@ public class User implements UserDetails {
     @Size(min=3, max=254)
     private String password;
 
-    @Transient
-    private String repeatPassword;//Todo:--?
+//    @Transient
+//    private String repeatPassword;//Todo:--?
 
     @Column(nullable = false)
     @NotBlank
@@ -54,11 +57,21 @@ public class User implements UserDetails {
 
     private String avatar;
 
-//    private Set<Role> roles;
+    @ManyToMany(cascade=CascadeType.PERSIST)
+    @JoinTable(
+            name="User_Roles",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+    )
+    private Set<Role> roles= new HashSet<>();
+
+    public void addRole(Role role){
+        roles.add(role);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return roles;
     }
 
     @Override

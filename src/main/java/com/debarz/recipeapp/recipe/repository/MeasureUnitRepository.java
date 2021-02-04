@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface MeasureUnitRepository extends JpaRepository<MeasureUnit, Long> {
 
-    Optional<MeasureUnit> findByDescription(String description);
+//    Optional<MeasureUnit> findByDescription(String description);
 }

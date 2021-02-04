@@ -3,10 +3,14 @@ package com.debarz.recipeapp.user.service;
 import com.debarz.recipeapp.user.dto.UserDTO;
 import com.debarz.recipeapp.user.exception.EntityNotFoundException;
 import com.debarz.recipeapp.user.mapper.UserMapper;
+import com.debarz.recipeapp.user.model.Role;
 import com.debarz.recipeapp.user.model.User;
+import com.debarz.recipeapp.user.repository.RoleRepository;
 import com.debarz.recipeapp.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,16 +18,20 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
     private UserMapper userMapper;
 
-    public UserDTO createUser(UserDTO userDTO){
-        User user = userMapper.convertUserDtoToUserEntity(userDTO);
-        User saveUser = userRepository.save(user);
-        userDTO.setId(saveUser.getId());
-        return userDTO;
+    public UserDTO createUser(User user){
+        Role role = roleRepository.getOne(2L);
+        user.addRole(role);
+        User savedUser = userRepository.save(user);
+//        User user = userMapper.convertUserDtoToUserEntity(userDTO);
+//        User saveUser = userRepository.save(user);
+//        userDTO.setId(saveUser.getId());
+        return userMapper.convertUserToDTO(savedUser);
     }
 
     public UserDTO getUserById(long id) {
@@ -59,5 +67,11 @@ public class UserService {
             throw new EntityNotFoundException(id);
         }
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findWithRolesByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 }
