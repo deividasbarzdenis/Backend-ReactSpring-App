@@ -3,12 +3,17 @@ package com.debarz.recipeapp.recipe.mapper;
 import com.debarz.recipeapp.recipe.dto.IngredientDTO;
 import com.debarz.recipeapp.recipe.dto.RecipeDTO;
 import com.debarz.recipeapp.recipe.model.*;
+import com.debarz.recipeapp.recipe.repository.MeasureUnitRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Component
 public class RecipeMapper {
+
+    private MeasureUnitRepository measureUnitRepository;
 
     public RecipeDTO convertRecipeToDTO(Recipe recipe) {
 
@@ -53,15 +58,15 @@ public class RecipeMapper {
         recipe.setIngredients(recipeDTO.getIngredientDTO().stream()
                 .map(ingredientDTOMap -> {
                     Ingredient ingredient = new Ingredient();
-                    MeasureUnit measureUnit = new MeasureUnit();
                     ingredient.setIngredientDescription(ingredientDTOMap.getIngredientDescription());
                     ingredient.setAmount(ingredientDTOMap.getAmount());
-                    measureUnit.setMuDescription(ingredientDTOMap.getMuDescription());
+                    MeasureUnit mu = measureUnitRepository.getOne(Long.parseLong(ingredientDTOMap.getMuDescription()));
+                    ingredient.setMu(mu);
                     recipe.addIngredient(ingredient);
                     return ingredient;
                 }).collect(Collectors.toSet()));
 
-        recipe.setDifficulty(Difficulty.valueOf(recipeDTO.getDifficulty()));
+        convertDifficulty(recipeDTO, recipe);
 
         Notes notes = new Notes();
         notes.setRecipeNotes(recipeDTO.getRecipeNotes());
@@ -76,5 +81,24 @@ public class RecipeMapper {
                 .collect(Collectors.toSet()));
 
         return recipe;
+    }
+
+    private void convertDifficulty(RecipeDTO recipeDTO, Recipe recipe) {
+        switch (recipeDTO.getDifficulty()) {
+            case "1":
+                recipe.setDifficulty(Difficulty.EASY);
+                break;
+            case "2":
+                recipe.setDifficulty(Difficulty.MODERATE);
+                break;
+            case "3":
+                recipe.setDifficulty(Difficulty.KIND_OF_HARD);
+                break;
+            case "4":
+                recipe.setDifficulty(Difficulty.HARD);
+                break;
+            default:
+                recipe.setDifficulty(Difficulty.EASY);
+        }
     }
 }

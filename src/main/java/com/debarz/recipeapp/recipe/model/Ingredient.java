@@ -27,6 +27,11 @@ public class Ingredient {
     @ManyToOne
     private Recipe recipe;
 
+    public void addMu(MeasureUnit mu) {
+        if (mu != null) {
+            this.mu = mu;
+        }
+    }
 
     public Ingredient() {
     }

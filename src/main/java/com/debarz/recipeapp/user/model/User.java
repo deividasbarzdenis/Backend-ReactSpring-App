@@ -1,10 +1,8 @@
 package com.debarz.recipeapp.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
@@ -27,29 +25,20 @@ public class User implements UserDetails {
 
     @Column(unique = true, nullable = false)
     @NotBlank
-    @Size(min=3, max=20)
+    @Size(min = 3, max = 200)
     private String username;
 
-    @Column(nullable = false)
-    @NotBlank
     @Size(min=3, max=254)
     private String lastName;
 
-//    @Column(nullable = false)
-//    @NotBlank
     @Size(min=3, max=254)
-    private String name; //Todo:--?
+    private String name;
 
     @Column(nullable = false)
     @NotBlank
     @Size(min=3, max=254)
     private String password;
 
-//    @Transient
-//    private String repeatPassword;//Todo:--?
-
-    @Column(nullable = false)
-    @NotBlank
     @Size(min=3, max=254)
     private String email;
 
@@ -57,7 +46,8 @@ public class User implements UserDetails {
 
     private String avatar;
 
-    @ManyToMany(cascade=CascadeType.PERSIST)
+    @ManyToMany
+    @Cascade(CascadeType.PERSIST)
     @JoinTable(
             name="User_Roles",
             joinColumns = { @JoinColumn(name = "user_id") },
@@ -93,4 +83,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

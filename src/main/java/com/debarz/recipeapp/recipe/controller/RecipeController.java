@@ -7,6 +7,7 @@ import com.debarz.recipeapp.recipe.service.RecipeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,5 +29,17 @@ public class RecipeController {
     public ResponseEntity<RecipeDTO> addRecipe(@RequestBody @Valid RecipeDTO recipeDTO){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(recipeService.createRecipe(recipeDTO));
+    }
+
+    @GetMapping("/{id}")
+    public RecipeDTO getRecipe(@PathVariable long id){
+        return recipeService.getRecipeById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteRecipe(@PathVariable long id){
+        recipeService.deleteRecipe(id);
     }
 }
