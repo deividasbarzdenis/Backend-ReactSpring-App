@@ -16,6 +16,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class User implements UserDetails {
 
@@ -29,7 +30,7 @@ public class User implements UserDetails {
     private String username;
 
     @Size(min=3, max=254)
-    private String lastName;
+    private String lastname;
 
     @Size(min=3, max=254)
     private String name;

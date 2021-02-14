@@ -21,17 +21,13 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
-    private RoleRepository roleRepository;
     private UserMapper userMapper;
 
-    public UserDTO createUser(User user){
-        Role role = roleRepository.getOne(2L);
-        user.addRole(role);
-        User savedUser = userRepository.save(user);
-//        User user = userMapper.convertUserDtoToUserEntity(userDTO);
-//        User saveUser = userRepository.save(user);
-//        userDTO.setId(saveUser.getId());
-        return userMapper.convertUserToDTO(savedUser);
+    public UserDTO createUser(UserDTO userDTO){
+        User user = userMapper.convertUserDtoToUserEntity(userDTO);
+        User saveUser = userRepository.save(user);
+        userDTO.setId(saveUser.getId());
+        return userDTO;
     }
 
     public UserDTO getUserById(long id) {

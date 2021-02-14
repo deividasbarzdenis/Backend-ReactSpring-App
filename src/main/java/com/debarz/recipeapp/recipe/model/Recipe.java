@@ -2,7 +2,6 @@ package com.debarz.recipeapp.recipe.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -24,7 +23,7 @@ public class Recipe {
     private String source;
     private String url;
 
-    @Column(length=1000)
+    @Lob
     private String directions;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")

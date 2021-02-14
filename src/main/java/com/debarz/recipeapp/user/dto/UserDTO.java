@@ -11,7 +11,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Setter
+@Getter
 public class UserDTO {
 
     private Long id;
@@ -22,7 +24,10 @@ public class UserDTO {
 
     @NotBlank
     @Size(min=3, max=20)
-    private String lastName;
+    private String password;
+
+    @Size(min=3, max=20)
+    private String lastname;
 
     @Size(min=3, max=20)
     private String name;
@@ -37,7 +42,9 @@ public class UserDTO {
         this.id = user.getId();
         this.username=user.getUsername();
         this.name=user.getName();
-        this.lastName=user.getLastName();
+        this.lastname =user.getLastname();
+        this.email = user.getEmail();
+        this.phone = user.getPhone();
         this.roles=user.getRoles().stream()
                 .map(Role::getRoleName)
                 .collect(Collectors.toSet());

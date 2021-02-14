@@ -52,9 +52,12 @@ public class JwtProvider {
 
         String username = parseJwt.getBody().getSubject();
 
-        List<GrantedAuthority> roles = ((List<String>) parseJwt.getBody().get("roles")).stream()
+        List<GrantedAuthority> roles = ((List<String>) parseJwt.getBody()
+                .get("roles"))
+                .stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+
         if(StringUtils.isNotEmpty(username)){
             return new UsernamePasswordAuthenticationToken(username, null, roles);
         }
